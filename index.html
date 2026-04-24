@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Soprus Advertising — Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400;1,600&family=Inter:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #060606;
+  --bg2:     #0a0a0a;
+  --surf:    #101010;
+  --border:  rgba(255,255,255,0.06);
+  --border2: rgba(255,255,255,0.12);
+  --text:    #F0F0F0;
+  --muted:   #555;
+  --mid:     #888;
+  --accent:  #7C3AED;
+  --acl:     #A78BFA;
+  --white:   #FAFAFA;
+  --grad:    linear-gradient(135deg,#7C3AED,#2563EB);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Inter',system-ui,sans-serif;
+  font-weight:300;
+  overflow-x:hidden;
+  cursor:none;
+}
+a{text-decoration:none;color:inherit;cursor:none}
+button{background:none;border:none;font:inherit;cursor:none}
+
+/* ── CURSOR ── */
+#cur-dot{
+  position:fixed;width:6px;height:6px;
+  background:#fff;border-radius:50%;
+  pointer-events:none;z-index:99999;
+  transform:translate(-50%,-50%);
+  box-shadow:0 0 6px rgba(255,255,255,0.8);
+}
+
+/* ── PROGRESS ── */
+#prog{
+  position:fixed;top:0;left:0;height:2px;width:0%;
+  background:var(--grad);z-index:9998;
+  transition:width .05s linear;
+}
+
+/* ── NAV ── */
+#nav{
+  position:fixed;top:16px;left:20px;right:20px;
+  z-index:1000;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:15px 26px;
+  background:rgba(6,6,6,0.5);
+  backdrop-filter:blur(28px) saturate(160%);
+  -webkit-backdrop-filter:blur(28px) saturate(160%);
+  border:1px solid var(--border2);
+  border-radius:14px;
+  transition:background .4s,box-shadow .4s;
+}
+#nav.scrolled{background:rgba(6,6,6,0.86);box-shadow:0 12px 48px rgba(0,0,0,0.55)}
+.nav-logo{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.05rem;font-weight:400;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--white);
+}
+.nav-logo em{
+  font-style:italic;font-weight:300;
+  color:rgba(255,255,255,0.4);letter-spacing:.1em;
+  font-size:.88em;margin-left:6px;
+}
+.nav-links{display:flex;gap:36px;list-style:none}
+.nav-links a{
+  font-size:.72rem;letter-spacing:.18em;
+  text-transform:uppercase;color:rgba(255,255,255,0.38);
+  transition:color .2s;
+}
+.nav-links a:hover{color:var(--white)}
+.nav-cta{
+  font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--white);background:var(--accent);
+  padding:10px 22px;border-radius:8px;
+  transition:background .2s,box-shadow .2s;
+}
+.nav-cta:hover{background:#6D28D9;box-shadow:0 0 28px rgba(124,58,237,0.45)}
+
+/* ── HERO ── */
+#hero{
+  position:relative;min-height:100svh;
+  display:flex;align-items:flex-end;
+  padding:0 60px 80px;overflow:hidden;
+}
+.orb{
+  position:absolute;border-radius:50%;
+  filter:blur(110px);pointer-events:none;
+}
+.orb1{
+  width:680px;height:680px;
+  background:radial-gradient(circle,rgba(124,58,237,.28) 0%,transparent 70%);
+  top:-180px;right:-120px;
+  animation:f1 14s ease-in-out infinite alternate;
+}
+.orb2{
+  width:480px;height:480px;
+  background:radial-gradient(circle,rgba(37,99,235,.18) 0%,transparent 70%);
+  bottom:-60px;left:8%;
+  animation:f2 11s ease-in-out infinite alternate;
+}
+.orb3{
+  width:320px;height:320px;
+  background:radial-gradient(circle,rgba(167,139,250,.12) 0%,transparent 70%);
+  top:38%;left:42%;
+  animation:f1 16s ease-in-out infinite alternate-reverse;
+}
+@keyframes f1{to{transform:translate(50px,-70px) scale(1.1)}}
+@keyframes f2{to{transform:translate(-35px,45px) scale(.94)}}
+
+/* grain overlay */
+#hero::after{
+  content:'';position:absolute;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.045'/%3E%3C/svg%3E");
+  opacity:.5;pointer-events:none;mix-blend-mode:overlay;
+}
+.hero-inner{position:relative;z-index:1}
+.hero-tag{
+  font-size:.68rem;letter-spacing:.35em;text-transform:uppercase;
+  color:rgba(255,255,255,.28);
+  margin-bottom:24px;
+  display:flex;align-items:center;gap:12px;
+}
+.hero-tag::before{
+  content:'';display:block;width:22px;height:1px;
+  background:var(--accent);
+}
+.hero-title{
+  font-family:'Inter',sans-serif;
+  font-size:clamp(2.6rem,6vw,7.5rem);
+  font-weight:900;line-height:.9;
+  letter-spacing:-.03em;color:var(--white);
+  margin-bottom:40px;
+  text-transform:uppercase;
+}
+.hl-word{display:inline-block}
+.hl-serif{
+  font-family:'Cormorant Garamond',serif;
+  font-weight:300;font-style:italic;
+  font-size:.72em;
+  text-transform:none;letter-spacing:-.01em;
+  background:linear-gradient(100deg,var(--acl),#93C5FD);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  display:block;
+}
+.hero-sub{
+  font-size:1rem;color:rgba(255,255,255,.36);
+  max-width:400px;line-height:1.8;margin-bottom:44px;
+}
+.hero-ctas{display:flex;gap:20px;align-items:center}
+.btn-primary{
+  display:inline-block;background:var(--white);color:#000;
+  font-size:.75rem;letter-spacing:.18em;text-transform:uppercase;
+  font-weight:600;padding:16px 38px;border-radius:8px;
+  transition:box-shadow .25s;
+}
+.btn-primary:hover{box-shadow:0 16px 48px rgba(255,255,255,.18)}
+.btn-ghost{
+  font-size:.78rem;letter-spacing:.1em;
+  color:rgba(255,255,255,.38);transition:color .2s;
+}
+.btn-ghost:hover{color:var(--white)}
+.hero-scroll{
+  position:absolute;bottom:40px;right:60px;
+  display:flex;flex-direction:column;align-items:center;gap:10px;z-index:1;
+}
+.scroll-line{
+  width:1px;height:64px;
+  background:linear-gradient(to bottom,transparent,rgba(255,255,255,.28));
+  animation:sline 2s ease-in-out infinite;
+}
+@keyframes sline{
+  0%{transform:scaleY(0);transform-origin:top;opacity:0}
+  40%{opacity:1}
+  100%{transform:scaleY(1);transform-origin:top;opacity:0}
+}
+.hero-scroll span{
+  font-size:.58rem;letter-spacing:.32em;text-transform:uppercase;
+  color:rgba(255,255,255,.22);writing-mode:vertical-rl;
+}
+
+/* ── MARQUEE ── */
+.marquee-wrap{
+  background:var(--accent);overflow:hidden;
+  padding:13px 0;
+  border-top:1px solid rgba(255,255,255,.06);
+  border-bottom:1px solid rgba(255,255,255,.06);
+  position:relative;z-index:1;
+}
+.marquee-track{
+  display:flex;width:max-content;
+  animation:mq 22s linear infinite;
+  white-space:nowrap;
+}
+.marquee-track span{
+  font-size:.68rem;letter-spacing:.3em;text-transform:uppercase;
+  color:rgba(255,255,255,.85);padding:0 24px;font-weight:500;
+}
+.marquee-track .sep{padding:0;color:rgba(255,255,255,.35)}
+@keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ── STATS ── */
+#stats{
+  display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr;
+  padding:80px 60px;
+  border-bottom:1px solid var(--border);
+  background:var(--bg);
+  position:relative;z-index:1;
+}
+.stat{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px}
+.stat-row{display:flex;align-items:baseline;gap:2px}
+.stat-num{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(3.5rem,6vw,5.8rem);font-weight:300;line-height:1;
+  background:linear-gradient(120deg,var(--acl),#93C5FD);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.stat-suf{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2rem,3.5vw,3.4rem);font-weight:300;
+  background:linear-gradient(120deg,var(--acl),#93C5FD);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.stat-label{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.stat-div{background:var(--border)}
+
+/* ── SERVICES ── */
+#services-section{
+  background:var(--bg);
+  padding-top:100px;
+  position:relative;z-index:1;
+}
+
+.srv-top{
+  padding:0 60px 44px;
+  display:flex;justify-content:space-between;align-items:flex-end;
+}
+.srv-top-left .sec-tag{
+  font-size:.62rem;letter-spacing:.35em;text-transform:uppercase;
+  color:var(--acl);margin-bottom:14px;
+}
+.srv-top-left h2{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2rem,4vw,3.6rem);font-weight:300;line-height:1.1;color:var(--white);
+}
+.srv-top-left h2 em{font-style:italic;color:var(--acl)}
+.srv-hint{
+  font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--muted);padding-bottom:6px;
+}
+#srv-vp{overflow:hidden;padding-bottom:80px}
+#srv-track{
+  display:flex;padding:0 60px;gap:20px;
+  width:max-content;will-change:transform;
+}
+/* pin spacer iniettato da GSAP */
+.pin-spacer{background:var(--bg)!important;z-index:1!important}
+/* ── SC CARD — GlowingShadow + highlight-card hybrid ── */
+@keyframes sc-blob-a{0%,100%{transform:translate(0,0) scale(1);opacity:.22}50%{transform:translate(8px,-14px) scale(1.15);opacity:.38}}
+@keyframes sc-blob-b{0%,100%{transform:translate(0,0) scale(1);opacity:.14}50%{transform:translate(-10px,9px) scale(.88);opacity:.26}}
+@keyframes sc-ping-ring{0%{transform:scale(1);opacity:.55}100%{transform:scale(2);opacity:0}}
+@keyframes sc-dots-b{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes sc-sweep{from{transform:translateX(-120%) skewX(-12deg);opacity:0}15%{opacity:1}to{transform:translateX(380%) skewX(-12deg);opacity:0}}
+@keyframes sc-border-glow{
+  0%  {box-shadow:0 0 0 2px hsl(280 100% 65%/.85),0 0 28px hsl(280 100% 65%/.35),0 20px 50px rgba(0,0,0,.5)}
+  16% {box-shadow:0 0 0 2px hsl(340 100% 65%/.85),0 0 28px hsl(340 100% 65%/.35),0 20px 50px rgba(0,0,0,.5)}
+  33% {box-shadow:0 0 0 2px hsl(40  100% 65%/.85),0 0 28px hsl(40  100% 65%/.35),0 20px 50px rgba(0,0,0,.5)}
+  50% {box-shadow:0 0 0 2px hsl(120 100% 65%/.85),0 0 28px hsl(120 100% 65%/.35),0 20px 50px rgba(0,0,0,.5)}
+  66% {box-shadow:0 0 0 2px hsl(180 100% 65%/.85),0 0 28px hsl(180 100% 65%/.35),0 20px 50px rgba(0,0,0,.5)}
+  83% {box-shadow:0 0 0 2px hsl(240 100% 65%/.85),0 0 28px hsl(240 100% 65%/.35),0 20px 50px rgba(0,0,0,.5)}
+  100%{box-shadow:0 0 0 2px hsl(280 100% 65%/.85),0 0 28px hsl(280 100% 65%/.35),0 20px 50px rgba(0,0,0,.5)}
+}
+
+.sc{
+  width:360px;height:480px;flex-shrink:0;
+  background:var(--surf);
+  border:1px solid var(--border);
+  border-radius:14px;padding:40px 36px;
+  display:flex;flex-direction:column;
+  position:relative;overflow:hidden;
+  transition:transform .5s cubic-bezier(.34,1.56,.64,1),border-color .35s,box-shadow .4s ease;
+  cursor:pointer;
+}
+.sc::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(124,58,237,.12) 0%,transparent 60%);
+  opacity:0;transition:opacity .3s;border-radius:14px;z-index:0;
+}
+.sc:hover{
+  transform:scale(1.04) rotate(-.7deg);
+  border-color:transparent;
+  animation:sc-border-glow 3s linear infinite;
+}
+.sc:hover::before{opacity:1}
+
+/* z-index: all content above blobs */
+.sc-num,.sc-icon,.sc-title,.sc-desc,.sc-arr,.sc-dots{position:relative;z-index:1}
+
+.sc-num{
+  font-size:.62rem;letter-spacing:.3em;color:var(--accent);
+  font-weight:500;
+}
+
+/* icon: ping ring + rotation on hover */
+.sc-icon{
+  width:44px;height:44px;margin:auto 0 28px;
+  border:1px solid rgba(124,58,237,.25);border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;z-index:1;
+  transition:transform .5s cubic-bezier(.34,1.56,.64,1),border-color .3s;
+}
+.sc-icon::before{
+  content:'';position:absolute;inset:-5px;
+  border-radius:14px;border:1px solid rgba(167,139,250,.4);
+  animation:sc-ping-ring 2.2s ease-out infinite;
+  opacity:0;transition:opacity .3s;
+}
+.sc:hover .sc-icon{transform:rotate(12deg) scale(1.1);border-color:rgba(167,139,250,.5)}
+.sc:hover .sc-icon::before{opacity:1}
+.sc-icon svg{width:22px;height:22px;stroke:var(--acl);stroke-width:1.5;fill:none;transition:transform .7s ease,stroke .3s}
+.sc:hover .sc-icon svg{transform:rotate(180deg);stroke:#c4b5fd}
+
+/* title gradient */
+.sc-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:2rem;font-weight:400;
+  background:linear-gradient(120deg,#FAFAFA 25%,var(--acl) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:14px;line-height:1.15;
+}
+.sc-desc{
+  font-size:.82rem;color:var(--mid);line-height:1.75;
+  flex:1;
+}
+.sc-arr{
+  margin-top:28px;font-size:1.1rem;color:var(--accent);
+  transition:transform .2s;display:inline-block;
+}
+.sc:hover .sc-arr{transform:translateX(8px)}
+
+/* interior blobs */
+.sc-blob{
+  position:absolute;border-radius:50%;
+  pointer-events:none;filter:blur(30px);z-index:0;
+}
+.sc-blob-a{
+  width:90px;height:90px;
+  background:radial-gradient(circle,rgba(124,58,237,.38),transparent);
+  bottom:-18px;left:-18px;
+  animation:sc-blob-a 7s ease-in-out infinite;
+}
+.sc-blob-b{
+  width:56px;height:56px;
+  background:radial-gradient(circle,rgba(167,139,250,.28),transparent);
+  top:22px;right:12px;
+  animation:sc-blob-b 9s ease-in-out infinite;
+}
+
+/* sweep flash on hover */
+.sc-sweep{
+  position:absolute;top:0;left:0;
+  width:45%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.06),transparent);
+  pointer-events:none;z-index:1;
+  transform:translateX(-120%) skewX(-12deg);opacity:0;
+}
+.sc:hover .sc-sweep{animation:sc-sweep .9s ease-out}
+
+/* animated dots */
+.sc-dots{
+  display:flex;gap:5px;margin-top:14px;
+  opacity:0;transition:opacity .3s;
+  position:relative;z-index:1;
+}
+.sc:hover .sc-dots{opacity:.6}
+.sc-dots span{
+  width:5px;height:5px;
+  background:var(--acl);border-radius:50%;
+  animation:sc-dots-b .65s ease-in-out infinite;
+}
+.sc-dots span:nth-child(2){animation-delay:.12s}
+.sc-dots span:nth-child(3){animation-delay:.24s}
+
+/* ── WORK ── */
+#work{
+  background:var(--bg2);
+  padding:100px 60px;
+  border-top:1px solid var(--border);
+  position:relative;z-index:1;
+}
+.work-hd{
+  display:flex;justify-content:space-between;align-items:flex-end;
+  margin-bottom:64px;
+}
+.work-hd h2{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2rem,4vw,3.6rem);font-weight:300;line-height:1.1;color:var(--white);
+}
+.work-hd h2 em{font-style:italic;color:var(--acl)}
+.work-cnt{font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.work-list{display:flex;flex-direction:column;gap:2px}
+.wi{
+  display:grid;grid-template-columns:1fr 1fr;
+  background:var(--surf);border:1px solid var(--border);
+  border-radius:12px;overflow:hidden;
+  transition:border-color .3s;
+}
+.wi:hover{border-color:var(--border2)}
+.wi-l{
+  padding:48px;
+  display:flex;flex-direction:column;justify-content:space-between;
+}
+.wi-r{position:relative;min-height:270px;overflow:hidden}
+.wi-vis{
+  position:absolute;inset:0;
+  display:flex;align-items:flex-end;padding:28px;
+}
+.wi-vis-label{
+  font-family:'Cormorant Garamond',serif;
+  font-size:2.8rem;font-weight:300;font-style:italic;
+  color:rgba(255,255,255,.13);line-height:1;
+}
+/* project gradients */
+.vg  { background:linear-gradient(140deg,#1E3A5F 0%,#1D4ED8 100%) }
+.vgr { background:linear-gradient(140deg,#3B0764 0%,#6D28D9 100%) }
+.vb  { background:linear-gradient(140deg,#431407 0%,#9A3412 100%) }
+.vs  { background:linear-gradient(140deg,#052E16 0%,#15803D 100%) }
+.va  { background:linear-gradient(140deg,#0C0A09 0%,#292524 100%) }
+.vt  { background:linear-gradient(140deg,#0C4A6E 0%,#0891B2 100%) }
+.wi-tag{font-size:.62rem;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.wi-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:2.2rem;font-weight:300;color:var(--white);
+  line-height:1.1;margin-bottom:6px;
+}
+.wi-sub{font-size:.78rem;color:var(--muted);letter-spacing:.06em;margin-bottom:24px}
+.wi-pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px}
+.pil{
+  font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;
+  color:rgba(255,255,255,.38);
+  border:1px solid var(--border);padding:5px 12px;border-radius:100px;
+}
+.wi-stack{display:flex;flex-wrap:wrap;gap:5px}
+.stk{
+  font-size:.6rem;letter-spacing:.05em;color:var(--muted);
+  background:rgba(255,255,255,.04);padding:4px 10px;border-radius:4px;
+}
+
+/* ── PROCESS ── */
+#process{
+  background:var(--bg);padding:100px 60px;
+  border-top:1px solid var(--border);
+  position:relative;z-index:1;
+}
+.process-hd{margin-bottom:72px}
+.process-hd h2{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2rem,4vw,3.6rem);font-weight:300;line-height:1.1;color:var(--white);
+}
+.process-hd h2 em{font-style:italic;color:var(--acl)}
+.process-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:2px;
+  background:var(--border);
+  border:1px solid var(--border);border-radius:14px;overflow:hidden;
+}
+.ps{background:var(--bg);padding:48px 36px}
+.ps-num{
+  font-size:.6rem;letter-spacing:.3em;color:var(--accent);
+  margin-bottom:24px;font-weight:500;
+}
+.ps-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.8rem;font-weight:400;color:var(--white);margin-bottom:14px;
+}
+.ps-desc{font-size:.82rem;color:var(--mid);line-height:1.75}
+
+/* ── CTA ── */
+#cta{
+  background:var(--bg2);
+  border-top:1px solid var(--border);
+  padding:120px 60px;text-align:center;
+  position:relative;z-index:1;
+}
+.cta-tag{
+  font-size:.62rem;letter-spacing:.35em;text-transform:uppercase;
+  color:var(--acl);margin-bottom:24px;display:block;
+}
+.cta-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2.5rem,5vw,5.5rem);font-weight:300;line-height:1.05;
+  color:var(--white);max-width:640px;margin:0 auto 16px;
+}
+.cta-title em{font-style:italic;color:var(--acl)}
+.cta-sub{
+  font-size:.92rem;color:rgba(255,255,255,.35);
+  margin-bottom:64px;font-weight:300;
+}
+.cform{
+  max-width:640px;margin:0 auto;
+  background:var(--surf);
+  border:1px solid rgba(124,58,237,.5);border-radius:16px;overflow:hidden;
+  box-shadow:
+    0 0 0 1px rgba(124,58,237,.2),
+    0 0 30px rgba(124,58,237,.35),
+    0 0 70px rgba(124,58,237,.18),
+    0 0 140px rgba(124,58,237,.08);
+  animation:neon 3.5s ease-in-out infinite alternate;
+}
+@keyframes neon{
+  from{box-shadow:0 0 0 1px rgba(124,58,237,.2),0 0 24px rgba(124,58,237,.3),0 0 55px rgba(124,58,237,.15),0 0 110px rgba(124,58,237,.06)}
+  to  {box-shadow:0 0 0 1px rgba(167,139,250,.35),0 0 40px rgba(124,58,237,.55),0 0 90px rgba(124,58,237,.28),0 0 160px rgba(124,58,237,.12)}
+}
+.cform-body{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border)}
+.ff{background:var(--surf);padding:28px 32px;display:flex;flex-direction:column;gap:10px}
+.ff.full{grid-column:1/-1}
+.ff label{font-size:.58rem;letter-spacing:.3em;text-transform:uppercase;color:var(--muted)}
+.ff input,.ff select,.ff textarea{
+  background:transparent;border:none;
+  border-bottom:1px solid rgba(255,255,255,.1);
+  color:var(--white);font-family:'Inter',sans-serif;
+  font-size:.9rem;font-weight:300;padding:8px 0;
+  outline:none;transition:border-color .2s;width:100%;
+}
+.ff input:focus,.ff select:focus,.ff textarea:focus{border-color:var(--accent)}
+.ff select option{background:#111}
+.ff textarea{resize:none;min-height:88px;line-height:1.65}
+.cform-foot{
+  background:var(--surf);padding:24px 32px;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.cform-note{font-size:.7rem;color:rgba(255,255,255,.2);letter-spacing:.06em}
+.btn-sub{
+  background:var(--accent);color:var(--white);
+  font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;
+  font-weight:600;padding:14px 34px;border-radius:8px;
+  transition:background .2s,box-shadow .2s;
+}
+.btn-sub:hover{background:#6D28D9;box-shadow:0 8px 28px rgba(124,58,237,.45)}
+.cta-contacts{display:flex;justify-content:center;gap:40px;margin-top:48px}
+.cta-contacts a{
+  font-size:.75rem;letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(255,255,255,.3);transition:color .2s;
+}
+.cta-contacts a:hover{color:var(--white)}
+.form-ok{
+  display:none;max-width:640px;margin:0 auto;
+  border:1px solid var(--border2);border-radius:16px;
+  padding:56px;text-align:center;background:var(--surf);
+}
+.form-ok p{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.8rem;font-weight:300;color:var(--white);margin:0;
+}
+.form-ok span{display:block;font-size:.78rem;color:var(--muted);margin-top:10px;letter-spacing:.1em}
+
+/* ── FOOTER ── */
+footer{
+  background:transparent;border-top:1px solid var(--border);
+  padding:56px 60px;
+  display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;
+  position:relative;z-index:1;
+}
+.fbrand{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.05rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--white);margin-bottom:12px;
+}
+.fdesc{font-size:.78rem;color:var(--muted);line-height:1.7;max-width:220px}
+.fcol h4{font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+.fcol ul{list-style:none}
+.fcol ul li{margin-bottom:10px}
+.fcol ul li a{font-size:.8rem;color:rgba(255,255,255,.32);transition:color .2s}
+.fcol ul li a:hover{color:var(--white)}
+.fbot{
+  background:transparent;
+  border-top:1px solid var(--border);padding:18px 60px;
+  display:flex;justify-content:space-between;align-items:center;
+  position:relative;z-index:1;
+}
+.fbot p,.fbot a{font-size:.68rem;color:var(--muted);letter-spacing:.08em;transition:color .2s}
+.fbot a:hover{color:var(--white)}
+
+
+/* ── UNICORN BG ── */
+#unicorn-bg{
+  position:fixed;inset:0;z-index:0;
+  pointer-events:none;mix-blend-mode:screen;overflow:hidden;
+}
+#unicorn-bg>div{width:100%!important;height:100%!important}
+#unicorn-bg canvas{width:100%!important;height:100%!important}
+@media(max-width:768px){
+  #unicorn-bg>div{
+    width:max(100vw,calc(100vh * 1.6))!important;
+    height:max(100vh,calc(100vw * 0.625))!important;
+    position:absolute;top:50%;left:50%;
+    transform:translate(-50%,-50%);
+  }
+}
+
+/* ── REDUCED MOTION ── */
+@media(prefers-reduced-motion:reduce){
+  .orb,.scroll-line,.marquee-track{animation:none!important}
+  #cur,#cur-dot{display:none!important}
+  body{cursor:auto}
+  a,button{cursor:pointer}
+}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1024px){
+  .process-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:768px){
+  body{cursor:auto}
+  #cur,#cur-dot{display:none}
+  a,button{cursor:pointer}
+  #nav{top:10px;left:12px;right:12px;padding:14px 18px}
+  .nav-links{display:none}
+  #hero{padding:0 24px 60px}
+  .hero-scroll{display:none}
+  #stats{grid-template-columns:1fr;padding:48px 24px}
+  .stat-div{height:1px;width:auto}
+  .srv-top{padding:0 24px 32px;flex-direction:column;align-items:flex-start;gap:10px}
+  #srv-track{padding:0 24px 60px}
+  .sc{width:290px;height:430px}
+  #work{padding:64px 24px}
+  .work-hd{flex-direction:column;align-items:flex-start;gap:8px}
+  .wi{grid-template-columns:1fr}
+  .wi-r{min-height:180px}
+  #process{padding:64px 24px}
+  .process-grid{grid-template-columns:1fr}
+  #cta{padding:80px 24px}
+  .cform-body{grid-template-columns:1fr}
+  .ff.full{grid-column:1}
+  .cform-foot{flex-direction:column;gap:16px;align-items:flex-start}
+  footer{grid-template-columns:1fr 1fr;padding:48px 24px}
+  .fbot{padding:16px 24px;flex-direction:column;gap:8px;text-align:center}
+}
+@media(max-width:480px){footer{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div id="unicorn-bg">
+  <div style="width: 1440px; height: 900px" data-us-project="cjtjKRzmXTEgbnoU1d9f"></div>
+</div>
+<div id="cur-dot"></div>
+<div id="prog"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-logo"><img src="logo.png" alt="Soprus" style="height:26px;vertical-align:middle;margin-right:10px;opacity:.9">Soprus <em>Advertising</em></div>
+  <ul class="nav-links">
+    <li><a href="#services-section">Servizi</a></li>
+    <li><a href="#work">Lavori</a></li>
+    <li><a href="#process">Processo</a></li>
+  </ul>
+  <a href="#cta" class="nav-cta magnetic">Iniziamo</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+
+  <div class="hero-inner">
+    <p class="hero-tag">Studio digitale · Torino 2026</p>
+    <h1 class="hero-title">
+      <span class="hl-word">Siti</span> <span class="hl-word">che</span><br>
+      <span class="hl-serif">funzionano.</span>
+      <span class="hl-word">Sistemi</span> <span class="hl-word">che</span><br>
+      <span class="hl-serif">crescono.</span>
+    </h1>
+    <p class="hero-sub">Brand identity, siti web e sistemi AI per aziende che vogliono crescere, non solo esistere online.</p>
+    <div class="hero-ctas">
+      <a href="#cta" class="btn-primary magnetic">Inizia il progetto</a>
+      <a href="#work" class="btn-ghost">Guarda i lavori &nbsp;→</a>
+    </div>
+  </div>
+
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span>Siti Web</span><span class="sep"> · </span>
+    <span>Agenti AI</span><span class="sep"> · </span>
+    <span>Automazioni</span><span class="sep"> · </span>
+    <span>Integrazioni</span><span class="sep"> · </span>
+    <span>Gestionali</span><span class="sep"> · </span>
+    <span>Brand Identity</span><span class="sep"> · </span>
+    <span>SEO &amp; Analytics</span><span class="sep"> · </span>
+    <span>Siti Web</span><span class="sep"> · </span>
+    <span>Agenti AI</span><span class="sep"> · </span>
+    <span>Automazioni</span><span class="sep"> · </span>
+    <span>Integrazioni</span><span class="sep"> · </span>
+    <span>Gestionali</span><span class="sep"> · </span>
+    <span>Brand Identity</span><span class="sep"> · </span>
+    <span>SEO &amp; Analytics</span><span class="sep"> · </span>
+  </div>
+</div>
+
+<!-- STATS -->
+<div id="stats">
+  <div class="stat">
+    <div class="stat-row">
+      <span class="stat-num" data-count="20">0</span>
+      <span class="stat-suf">+</span>
+    </div>
+    <div class="stat-label">Progetti consegnati</div>
+  </div>
+  <div class="stat-div"></div>
+  <div class="stat">
+    <div class="stat-row">
+      <span class="stat-num" data-count="500">0</span>
+      <span class="stat-suf">+</span>
+    </div>
+    <div class="stat-label">Ore automatizzate / mese</div>
+  </div>
+  <div class="stat-div"></div>
+  <div class="stat">
+    <div class="stat-row">
+      <span class="stat-num" data-count="100">0</span>
+      <span class="stat-suf">%</span>
+    </div>
+    <div class="stat-label">Clienti seguiti</div>
+  </div>
+</div>
+
+<!-- SERVICES (pinned horizontal scroll) -->
+<section id="services-section">
+  <div class="srv-top">
+    <div class="srv-top-left">
+      <p class="sec-tag">/ 01 · Servizi</p>
+      <h2>Tutto quello che <em>serve.</em></h2>
+    </div>
+    <p class="srv-hint">← Scorri</p>
+  </div>
+  <div id="srv-vp">
+    <div id="srv-track">
+
+      <div class="sc">
+        <div class="sc-blob sc-blob-a"></div>
+        <div class="sc-blob sc-blob-b"></div>
+        <div class="sc-sweep"></div>
+        <div class="sc-num">01</div>
+        <div class="sc-icon">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        </div>
+        <div class="sc-title">Siti Web</div>
+        <p class="sc-desc">Design e sviluppo su misura, da siti vetrina a piattaforme complesse. Veloci, scalabili, ottimizzati per convertire.</p>
+        <span class="sc-arr">→</span>
+        <div class="sc-dots"><span></span><span></span><span></span></div>
+      </div>
+
+      <div class="sc">
+        <div class="sc-blob sc-blob-a"></div>
+        <div class="sc-blob sc-blob-b"></div>
+        <div class="sc-sweep"></div>
+        <div class="sc-num">02</div>
+        <div class="sc-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+        </div>
+        <div class="sc-title">Agenti AI</div>
+        <p class="sc-desc">Agenti autonomi che gestiscono clienti, analizzano dati e prendono decisioni operative senza intervento umano costante.</p>
+        <span class="sc-arr">→</span>
+        <div class="sc-dots"><span></span><span></span><span></span></div>
+      </div>
+
+      <div class="sc">
+        <div class="sc-blob sc-blob-a"></div>
+        <div class="sc-blob sc-blob-b"></div>
+        <div class="sc-sweep"></div>
+        <div class="sc-num">03</div>
+        <div class="sc-icon">
+          <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        </div>
+        <div class="sc-title">Workflow Automatizzati</div>
+        <p class="sc-desc">Progettazione e implementazione di flussi di lavoro automatici. Elimina i processi manuali e fai girare la tua azienda da sola.</p>
+        <span class="sc-arr">→</span>
+        <div class="sc-dots"><span></span><span></span><span></span></div>
+      </div>
+
+      <div class="sc">
+        <div class="sc-blob sc-blob-a"></div>
+        <div class="sc-blob sc-blob-b"></div>
+        <div class="sc-sweep"></div>
+        <div class="sc-num">04</div>
+        <div class="sc-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 6v6l4 2"/><circle cx="19" cy="5" r="3" fill="currentColor" stroke="none" style="fill:var(--accent);opacity:.7"/></svg>
+        </div>
+        <div class="sc-title">Integrazione AI</div>
+        <p class="sc-desc">Porta l'intelligenza artificiale nei tuoi sistemi esistenti: risposta automatica, analisi predittiva, generazione documenti, classificazione dati.</p>
+        <span class="sc-arr">→</span>
+        <div class="sc-dots"><span></span><span></span><span></span></div>
+      </div>
+
+      <div class="sc">
+        <div class="sc-blob sc-blob-a"></div>
+        <div class="sc-blob sc-blob-b"></div>
+        <div class="sc-sweep"></div>
+        <div class="sc-num">05</div>
+        <div class="sc-icon">
+          <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+        </div>
+        <div class="sc-title">Gestionali Su Misura</div>
+        <p class="sc-desc">CRM, ERP e dashboard operative costruite attorno ai tuoi processi reali. Nessun software generico, solo quello che ti serve.</p>
+        <span class="sc-arr">→</span>
+        <div class="sc-dots"><span></span><span></span><span></span></div>
+      </div>
+
+      <div class="sc">
+        <div class="sc-blob sc-blob-a"></div>
+        <div class="sc-blob sc-blob-b"></div>
+        <div class="sc-sweep"></div>
+        <div class="sc-num">06</div>
+        <div class="sc-icon">
+          <svg viewBox="0 0 24 24"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M13 6h3a2 2 0 0 1 2 2v7M11 18H8a2 2 0 0 1-2-2V9"/></svg>
+        </div>
+        <div class="sc-title">Integrazioni &amp; API</div>
+        <p class="sc-desc">Connetti piattaforme, servizi cloud e sistemi legacy. I tuoi strumenti parlano tra loro e smettono di creare silos di dati.</p>
+        <span class="sc-arr">→</span>
+        <div class="sc-dots"><span></span><span></span><span></span></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- WORK -->
+<section id="work">
+  <div class="work-hd">
+    <div>
+      <p class="sec-tag" style="font-size:.62rem;letter-spacing:.35em;text-transform:uppercase;color:var(--acl);margin-bottom:14px">/ 02 · Lavori</p>
+      <h2>Progetti <em>recenti.</em></h2>
+    </div>
+    <p class="work-cnt">06 lavori</p>
+  </div>
+  <div class="work-list">
+
+    <div class="wi">
+      <div class="wi-l">
+        <div>
+          <p class="wi-tag">Immobiliare</p>
+          <h3 class="wi-title">Grande Immobiliare</h3>
+          <p class="wi-sub">Compra, vendi, affitta</p>
+          <div class="wi-pills">
+            <span class="pil">Sito Web</span><span class="pil">Catalogo</span>
+            <span class="pil">Chatbot</span><span class="pil">Valutazione</span>
+          </div>
+        </div>
+        <div class="wi-stack">
+          <span class="stk">Vercel</span><span class="stk">HTML/CSS</span><span class="stk">JavaScript</span>
+        </div>
+      </div>
+      <div class="wi-r"><img src="grande-1.png" alt="Grande Immobiliare" style="width:100%;height:100%;object-fit:cover;object-position:top;display:block"></div>
+    </div>
+
+    <div class="wi">
+      <div class="wi-l">
+        <div>
+          <p class="wi-tag">Ristorazione</p>
+          <h3 class="wi-title">La Griglia</h3>
+          <p class="wi-sub">Dal 1994</p>
+          <div class="wi-pills">
+            <span class="pil">Sito Web</span><span class="pil">Prenotazioni</span>
+            <span class="pil">Ordini Online</span><span class="pil">Click &amp; Collect</span>
+          </div>
+        </div>
+        <div class="wi-stack">
+          <span class="stk">Vercel</span><span class="stk">Turso DB</span>
+          <span class="stk">Stripe</span><span class="stk">Node.js</span>
+        </div>
+      </div>
+      <div class="wi-r"><img src="work1.png" alt="La Griglia" style="width:100%;height:100%;object-fit:cover;object-position:top;display:block"></div>
+    </div>
+
+    <div class="wi">
+      <div class="wi-l">
+        <div>
+          <p class="wi-tag">Ristorazione</p>
+          <h3 class="wi-title">Sakana</h3>
+          <p class="wi-sub">Dal 2018</p>
+          <div class="wi-pills">
+            <span class="pil">Sito Web</span><span class="pil">Menu Digitale</span>
+            <span class="pil">Ordini</span><span class="pil">Prenotazioni</span>
+          </div>
+        </div>
+        <div class="wi-stack">
+          <span class="stk">Vercel</span><span class="stk">Turso DB</span>
+          <span class="stk">Stripe</span><span class="stk">Resend</span>
+        </div>
+      </div>
+      <div class="wi-r"><img src="work3.png" alt="Sakana" style="width:100%;height:100%;object-fit:cover;object-position:top;display:block"></div>
+    </div>
+
+    <div class="wi">
+      <div class="wi-l">
+        <div>
+          <p class="wi-tag">Odontoiatria · Torino</p>
+          <h3 class="wi-title">Studio Rosato</h3>
+          <p class="wi-sub">Due specialisti, una cura unica</p>
+          <div class="wi-pills">
+            <span class="pil">Sito Web</span><span class="pil">Prenotazioni</span>
+            <span class="pil">Chatbot</span><span class="pil">Prima Visita</span>
+          </div>
+        </div>
+        <div class="wi-stack">
+          <span class="stk">Vercel</span><span class="stk">HTML/CSS</span><span class="stk">JavaScript</span>
+        </div>
+      </div>
+      <div class="wi-r"><img src="rosato-1.png" alt="Studio Rosato" style="width:100%;height:100%;object-fit:cover;object-position:top;display:block"></div>
+    </div>
+
+    <div class="wi">
+      <div class="wi-l">
+        <div>
+          <p class="wi-tag">Automotive</p>
+          <h3 class="wi-title">Velox</h3>
+          <p class="wi-sub">Auto di lusso</p>
+          <div class="wi-pills">
+            <span class="pil">Sito Web</span><span class="pil">Configuratore</span>
+            <span class="pil">Test Drive</span><span class="pil">Catalogo</span>
+          </div>
+        </div>
+        <div class="wi-stack">
+          <span class="stk">Vercel</span><span class="stk">Node.js</span><span class="stk">Resend</span>
+        </div>
+      </div>
+      <div class="wi-r"><img src="work5.png" alt="Velox" style="width:100%;height:100%;object-fit:cover;object-position:top;display:block"></div>
+    </div>
+
+    <div class="wi">
+      <div class="wi-l">
+        <div>
+          <p class="wi-tag">Odontoiatria · Torino</p>
+          <h3 class="wi-title">Studio D'Errico</h3>
+          <p class="wi-sub">Professionalita e cura</p>
+          <div class="wi-pills">
+            <span class="pil">Sito Web</span><span class="pil">Prenotazioni</span>
+            <span class="pil">Chatbot</span><span class="pil">Prima Visita</span>
+          </div>
+        </div>
+        <div class="wi-stack">
+          <span class="stk">Vercel</span><span class="stk">HTML/CSS</span><span class="stk">JavaScript</span>
+        </div>
+      </div>
+      <div class="wi-r"><img src="derrico-1.png" alt="Studio D'Errico" style="width:100%;height:100%;object-fit:cover;object-position:top;display:block"></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process">
+  <div class="process-hd">
+    <p class="sec-tag" style="font-size:.62rem;letter-spacing:.35em;text-transform:uppercase;color:var(--acl);margin-bottom:14px">/ 03 · Come lavoriamo</p>
+    <h2>Processo chiaro, <em>risultati prevedibili.</em></h2>
+  </div>
+  <div class="process-grid">
+    <div class="ps">
+      <p class="ps-num">01</p>
+      <p class="ps-title">Ascolto</p>
+      <p class="ps-desc">Prima di tutto capiamo il business, gli obiettivi e il pubblico. Nessuna soluzione preconfezionata.</p>
+    </div>
+    <div class="ps">
+      <p class="ps-num">02</p>
+      <p class="ps-title">Strategia</p>
+      <p class="ps-desc">Definiamo canali, messaggi e metriche. Un piano concreto prima di toccare un pixel.</p>
+    </div>
+    <div class="ps">
+      <p class="ps-num">03</p>
+      <p class="ps-title">Esecuzione</p>
+      <p class="ps-desc">Design, sviluppo e lancio in tempi certi. Iterazioni rapide basate sui dati reali.</p>
+    </div>
+    <div class="ps">
+      <p class="ps-num">04</p>
+      <p class="ps-title">Supporto</p>
+      <p class="ps-desc">Monitoraggio continuo, ottimizzazioni post-lancio e reportistica mensile trasparente.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <span class="cta-tag">/ 04 · Iniziamo</span>
+  <h2 class="cta-title">Il tuo progetto <em>ci aspetta.</em></h2>
+  <p class="cta-sub">Raccontaci cosa vuoi costruire. Rispondiamo entro 24 ore.</p>
+
+  <form class="cform" id="contactForm" novalidate>
+    <div class="cform-body">
+      <div class="ff">
+        <label for="f-nome">Nome *</label>
+        <input type="text" id="f-nome" name="nome" required placeholder="Mario Rossi">
+      </div>
+      <div class="ff">
+        <label for="f-mail">Email *</label>
+        <input type="email" id="f-mail" name="mail" required placeholder="mario@azienda.com">
+      </div>
+      <div class="ff full">
+        <label for="f-budget">Budget *</label>
+        <select id="f-budget" name="budget" required>
+          <option value="" disabled selected>Seleziona una fascia</option>
+          <option>Meno di €1.000</option>
+          <option>€1.000 – €3.000</option>
+          <option>€3.000 – €8.000</option>
+          <option>€8.000 – €20.000</option>
+          <option>Oltre €20.000</option>
+        </select>
+      </div>
+      <div class="ff full">
+        <label for="f-concept">Concept del progetto *</label>
+        <textarea id="f-concept" name="concept" required placeholder="Descrivi brevemente cosa vuoi realizzare..."></textarea>
+      </div>
+    </div>
+    <div class="cform-foot">
+      <p class="cform-note">Risposta garantita entro 24h</p>
+      <button type="submit" class="btn-sub magnetic">Invia richiesta</button>
+    </div>
+  </form>
+
+  <div class="form-ok" id="formOk">
+    <p>Messaggio ricevuto.</p>
+    <span>Ti risponderemo entro 24 ore.</span>
+  </div>
+
+  <div class="cta-contacts">
+    <a href="mailto:soprus.agency@gmail.com">soprus.agency@gmail.com</a>
+    <a href="tel:+393738878823">+39 373 887 8823</a>
+    <a href="tel:+393423867700">+39 342 386 7700</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <a href="/admin.html" class="fbrand">Soprus Advertising</a>
+    <p class="fdesc">Studio pubblicitario digitale. Strategie, identita e campagne che lavorano.</p>
+  </div>
+  <div class="fcol">
+    <h4>Servizi</h4>
+    <ul>
+      <li><a href="#services-section">Brand Identity</a></li>
+      <li><a href="#services-section">Siti Web</a></li>
+      <li><a href="#services-section">Agenti AI</a></li>
+      <li><a href="#services-section">Automazioni</a></li>
+    </ul>
+  </div>
+  <div class="fcol">
+    <h4>Studio</h4>
+    <ul>
+      <li><a href="#work">Lavori</a></li>
+      <li><a href="#process">Processo</a></li>
+      <li><a href="#cta">Contatto</a></li>
+    </ul>
+  </div>
+  <div class="fcol">
+    <h4>Contatti</h4>
+    <ul>
+      <li><a href="mailto:soprus.agency@gmail.com">soprus.agency@gmail.com</a></li>
+      <li><a href="tel:+393738878823">+39 373 887 8823</a></li>
+      <li><a href="tel:+393423867700">+39 342 386 7700</a></li>
+    </ul>
+  </div>
+</footer>
+<div class="fbot">
+  <p>© 2026 Soprus Advertising · Powered by Soprus Corporation</p>
+  <a href="privacy.html">Privacy Policy</a>
+</div>
+
+<script type="text/javascript">!function(){var u=window.UnicornStudio;if(u&&u.init){if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",function(){u.init()})}else{u.init()}}else{window.UnicornStudio={isInitialized:!1};var i=document.createElement("script");i.src="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.1.9/dist/unicornStudio.umd.js",i.onload=function(){if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",function(){UnicornStudio.init()})}else{UnicornStudio.init()}},(document.head||document.body).appendChild(i)}}();</script>
+<script defer src="/_vercel/insights/script.js"></script>
+
+<!-- GSAP da jsdelivr.net — unico CDN nella whitelist CSP -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+/* ─ CURSOR ─ */
+const dot = document.getElementById('cur-dot');
+document.addEventListener('mousemove',e=>{
+  dot.style.left=e.clientX+'px';
+  dot.style.top=e.clientY+'px';
+});
+
+/* ─ PROGRESS ─ */
+const prog = document.getElementById('prog');
+window.addEventListener('scroll',()=>{
+  const total=document.documentElement.scrollHeight-window.innerHeight;
+  prog.style.width=(window.scrollY/total*100)+'%';
+});
+
+/* ─ NAV ─ */
+ScrollTrigger.create({
+  start:'80px top',
+  onEnter:()=>document.getElementById('nav').classList.add('scrolled'),
+  onLeaveBack:()=>document.getElementById('nav').classList.remove('scrolled'),
+});
+
+/* ─ HERO REVEAL ─ */
+const words = gsap.utils.toArray('.hl-word');
+const serifs = gsap.utils.toArray('.hl-serif');
+gsap.from(words,{y:90,opacity:0,duration:1.3,stagger:.07,ease:'power4.out',delay:.15});
+gsap.from(serifs,{y:60,opacity:0,duration:1.6,stagger:.12,ease:'power3.out',delay:.45});
+gsap.from(['.hero-tag','.hero-sub','.hero-ctas'],{
+  y:30,opacity:0,duration:1,stagger:.14,ease:'power3.out',delay:.8
+});
+
+/* ─ STATS COUNTER ─ */
+document.querySelectorAll('.stat-num').forEach(el=>{
+  const target=parseInt(el.dataset.count);
+  ScrollTrigger.create({
+    trigger:el,start:'top 85%',once:true,
+    onEnter:()=>{
+      const obj={val:0};
+      gsap.to(obj,{val:target,duration:1.8,ease:'power2.out',
+        onUpdate:()=>{ el.textContent=Math.floor(obj.val); }
+      });
+    }
+  });
+});
+
+/* ─ SERVICES HORIZONTAL SCROLL ─ */
+const track = document.getElementById('srv-track');
+const section = document.getElementById('services-section');
+if(track && section){
+  const getEnd=()=>track.scrollWidth - window.innerWidth;
+  gsap.to(track,{
+    x:()=>-getEnd(),
+    ease:'none',
+    scrollTrigger:{
+      trigger:section,
+      start:'top top',
+      end:()=>'+=' + getEnd(),
+      pin:true,scrub:1.2,
+      invalidateOnRefresh:true,
+    }
+  });
+}
+
+/* ─ WORK STAGGER ─ */
+gsap.from('.wi',{
+  y:64,opacity:0,duration:.85,stagger:.1,ease:'power3.out',
+  scrollTrigger:{trigger:'#work',start:'top 78%'}
+});
+
+/* ─ PROCESS STAGGER ─ */
+gsap.from('.ps',{
+  y:40,opacity:0,duration:.7,stagger:.09,ease:'power3.out',
+  scrollTrigger:{trigger:'.process-grid',start:'top 80%'}
+});
+
+/* ─ MAGNETIC BUTTONS ─ */
+document.querySelectorAll('.magnetic').forEach(btn=>{
+  btn.addEventListener('mousemove',e=>{
+    const r=btn.getBoundingClientRect();
+    const x=e.clientX-r.left-r.width/2;
+    const y=e.clientY-r.top-r.height/2;
+    gsap.to(btn,{x:x*.24,y:y*.24,duration:.3,ease:'power2.out'});
+  });
+  btn.addEventListener('mouseleave',()=>{
+    gsap.to(btn,{x:0,y:0,duration:.6,ease:'elastic.out(1,.5)'});
+  });
+});
+
+/* ─ FORM ─ */
+document.getElementById('contactForm').addEventListener('submit',function(e){
+  e.preventDefault();
+  let ok=true;
+  this.querySelectorAll('[required]').forEach(f=>{
+    if(!f.value.trim()){f.style.borderColor='rgba(255,80,80,.6)';ok=false;}
+    else f.style.borderColor='';
+  });
+  if(!ok)return;
+  const btn=this.querySelector('.btn-sub');
+  btn.textContent='Invio...';btn.disabled=true;
+  fetch('/api/submit',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      nome:document.getElementById('f-nome').value.trim(),
+      mail:document.getElementById('f-mail').value.trim(),
+      budget:document.getElementById('f-budget').value,
+      concept:document.getElementById('f-concept').value.trim()
+    })
+  })
+  .then(r=>r.json())
+  .then(()=>{
+    this.style.display='none';
+    const ok=document.getElementById('formOk');
+    ok.style.display='block';
+    gsap.from(ok,{opacity:0,y:20,duration:.6,ease:'power3.out'});
+  })
+  .catch(()=>{btn.textContent='Invia richiesta';btn.disabled=false;alert('Errore. Riprova.');});
+});
+
+/* ─ REDUCED MOTION ─ */
+if(matchMedia('(prefers-reduced-motion:reduce)').matches){
+  gsap.globalTimeline.timeScale(0);
+}
+</script>
+</body>
+</html>
