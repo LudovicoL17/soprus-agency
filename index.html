@@ -90,9 +90,8 @@ button{background:none;border:none;font:inherit;cursor:none}
 }
 .nav-cta:hover{background:#6D28D9;box-shadow:0 0 28px rgba(124,58,237,0.45)}
 
-/* ── MOUNTAIN CANVAS ── */
-#mountain-bg{position:absolute;inset:0;z-index:0;pointer-events:none}
-#mountain-bg canvas{width:100%!important;height:100%!important;opacity:.55}
+/* ── WAVE CANVAS (lightweight) ── */
+#mountain-bg{position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.45}
 
 /* ── HERO ── */
 #hero{
@@ -269,7 +268,7 @@ button{background:none;border:none;font:inherit;cursor:none}
   font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;
   color:var(--muted);padding-bottom:6px;
 }
-#srv-vp{overflow:hidden;padding-bottom:80px}
+#srv-vp{overflow:hidden;padding:8px 0 80px}
 #srv-track{
   display:flex;padding:0 60px;gap:20px;
   width:max-content;will-change:transform;
@@ -613,6 +612,149 @@ footer{
 .fbot a:hover{color:var(--white)}
 
 
+/* ── SERVICE PREVIEW (mini animated panel) ── */
+#svc-preview{
+  position:fixed;pointer-events:none;z-index:600;
+  width:220px;border-radius:12px;overflow:hidden;
+  background:rgba(10,10,10,.92);border:1px solid rgba(124,58,237,.4);
+  backdrop-filter:blur(16px);
+  opacity:0;transition:opacity .25s ease;
+  box-shadow:0 16px 48px rgba(0,0,0,.6),0 0 0 1px rgba(124,58,237,.2);
+  transform:translate3d(-9999px,-9999px,0);
+}
+#svc-preview.active{opacity:1}
+.sp-wrap{padding:16px;display:none}
+.sp-wrap.active{display:block}
+.sp-label{
+  font-size:.58rem;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--acl);margin-bottom:10px;font-weight:500;
+}
+
+/* WEB: browser mockup */
+.sp-browser{
+  background:#161616;border-radius:6px;overflow:hidden;
+  border:1px solid rgba(255,255,255,.08);
+}
+.sp-bbar{
+  display:flex;align-items:center;gap:5px;
+  padding:6px 8px;background:#1a1a1a;border-bottom:1px solid rgba(255,255,255,.06);
+}
+.sp-bdot{width:6px;height:6px;border-radius:50%}
+.sp-burl{
+  flex:1;height:8px;background:rgba(255,255,255,.08);
+  border-radius:3px;margin-left:4px;
+}
+.sp-bcontent{padding:8px;display:flex;flex-direction:column;gap:5px}
+.sp-brow{
+  height:8px;background:rgba(124,58,237,.3);border-radius:3px;
+  animation:sp-build .8s ease forwards;width:0;
+}
+.sp-brow:nth-child(1){animation-delay:.1s}
+.sp-brow:nth-child(2){width:0;animation-delay:.3s;background:rgba(255,255,255,.1)}
+.sp-brow:nth-child(3){width:0;animation-delay:.5s;background:rgba(255,255,255,.1)}
+.sp-brow:nth-child(4){width:0;animation-delay:.7s;background:rgba(124,58,237,.2);height:20px;border-radius:4px}
+@keyframes sp-build{to{width:100%}}
+
+/* AI: chat */
+.sp-chat{display:flex;flex-direction:column;gap:6px;padding:4px}
+.sp-msg{
+  max-width:80%;padding:6px 10px;border-radius:10px;
+  font-size:.68rem;color:#e0e0e0;line-height:1.3;
+  opacity:0;transform:translateY(6px);
+  animation:sp-msgin .4s ease forwards;
+}
+.sp-msg.left{
+  background:rgba(124,58,237,.35);border-bottom-left-radius:3px;align-self:flex-start;
+}
+.sp-msg.right{
+  background:rgba(255,255,255,.1);border-bottom-right-radius:3px;align-self:flex-end;
+}
+.sp-msg:nth-child(1){animation-delay:.1s}
+.sp-msg:nth-child(2){animation-delay:.5s}
+.sp-msg:nth-child(3){animation-delay:.9s}
+.sp-typing{
+  display:flex;gap:3px;padding:6px 10px;
+  opacity:0;animation:sp-msgin .4s ease 1.3s forwards;
+}
+.sp-typing span{
+  width:5px;height:5px;background:var(--acl);border-radius:50%;
+  animation:sp-bounce .6s ease-in-out infinite;
+}
+.sp-typing span:nth-child(2){animation-delay:.15s}
+.sp-typing span:nth-child(3){animation-delay:.3s}
+@keyframes sp-msgin{to{opacity:1;transform:none}}
+@keyframes sp-bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+
+/* WORKFLOW: flow nodes */
+.sp-flow{display:flex;flex-direction:column;gap:6px;padding:4px}
+.sp-frow{display:flex;align-items:center;gap:6px;opacity:0;animation:sp-nodein .4s ease forwards}
+.sp-frow:nth-child(1){animation-delay:.1s}
+.sp-frow:nth-child(2){animation-delay:.4s}
+.sp-frow:nth-child(3){animation-delay:.7s}
+.sp-node{
+  font-size:.6rem;padding:4px 8px;border-radius:4px;
+  color:#e0e0e0;white-space:nowrap;
+}
+.sp-node.src{background:rgba(124,58,237,.4);border:1px solid rgba(124,58,237,.5)}
+.sp-node.act{background:rgba(37,99,235,.35);border:1px solid rgba(37,99,235,.4)}
+.sp-node.out{background:rgba(16,185,129,.25);border:1px solid rgba(16,185,129,.35);color:#6ee7b7}
+.sp-arr{color:rgba(255,255,255,.3);font-size:.7rem}
+@keyframes sp-nodein{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:none}}
+
+/* GESTIONALE: bar chart */
+.sp-chart{display:flex;align-items:flex-end;gap:5px;height:64px;padding:4px;border-bottom:1px solid rgba(255,255,255,.08)}
+.sp-bar{
+  flex:1;border-radius:3px 3px 0 0;
+  animation:sp-grow .8s cubic-bezier(.34,1.56,.64,1) forwards;
+  height:0;
+}
+.sp-bar:nth-child(1){background:rgba(124,58,237,.7);animation-delay:.1s;--h:70%}
+.sp-bar:nth-child(2){background:rgba(167,139,250,.5);animation-delay:.2s;--h:45%}
+.sp-bar:nth-child(3){background:rgba(124,58,237,.8);animation-delay:.3s;--h:85%}
+.sp-bar:nth-child(4){background:rgba(37,99,235,.5);animation-delay:.4s;--h:55%}
+.sp-bar:nth-child(5){background:rgba(124,58,237,.6);animation-delay:.5s;--h:65%}
+@keyframes sp-grow{to{height:var(--h)}}
+
+/* API: request cycle */
+.sp-api{display:flex;flex-direction:column;gap:8px;padding:4px}
+.sp-api-row{
+  display:flex;align-items:center;justify-content:space-between;gap:6px;
+  opacity:0;animation:sp-apiin .4s ease forwards;
+}
+.sp-api-row:nth-child(1){animation-delay:.1s}
+.sp-api-row:nth-child(2){animation-delay:.5s}
+.sp-api-row:nth-child(3){animation-delay:.9s}
+.sp-ep{
+  font-size:.55rem;padding:4px 7px;border-radius:4px;
+  color:#e0e0e0;font-family:monospace;
+}
+.sp-ep.app{background:rgba(124,58,237,.35)}
+.sp-ep.svc{background:rgba(37,99,235,.35)}
+.sp-ep.ok{background:rgba(16,185,129,.25);color:#6ee7b7}
+.sp-req{font-size:.55rem;color:rgba(167,139,250,.7);animation:sp-slide .5s ease infinite alternate}
+@keyframes sp-apiin{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+@keyframes sp-slide{from{transform:translateX(0)}to{transform:translateX(4px)}}
+
+/* INTEGRATION: pulse */
+.sp-int{display:flex;align-items:center;justify-content:center;gap:10px;padding:8px}
+.sp-int-icon{
+  width:36px;height:36px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;position:relative;
+}
+.sp-int-icon::after{
+  content:'';position:absolute;inset:-3px;border-radius:10px;
+  border:1px solid rgba(124,58,237,.5);
+  animation:sp-pulse 1.5s ease-out infinite;
+}
+@keyframes sp-pulse{0%{transform:scale(1);opacity:.7}100%{transform:scale(1.5);opacity:0}}
+.sp-int-line{flex:1;height:1px;background:linear-gradient(90deg,rgba(124,58,237,.3),rgba(124,58,237,.8),rgba(124,58,237,.3));position:relative;overflow:hidden}
+.sp-int-line::after{
+  content:'';position:absolute;width:8px;height:100%;background:rgba(167,139,250,.9);
+  animation:sp-flow 1.2s linear infinite;border-radius:50%;box-shadow:0 0 6px rgba(167,139,250,.8);
+}
+@keyframes sp-flow{from{left:-10px}to{left:110%}}
+
 /* ── WORK PREVIEW (project-showcase) ── */
 #work-preview{
   position:fixed;pointer-events:none;z-index:500;
@@ -872,9 +1014,9 @@ footer{
         <div class="fd-back"></div>
         <div class="fd-tab"></div>
         <div class="fd-cards">
-          <div class="fd-card"><img src="https://images.unsplash.com/photo-1514190051997-0f6f39ca5cde?w=200&q=80&auto=format&fit=crop" alt="Ramen"></div>
-          <div class="fd-card"><img src="https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=200&q=80&auto=format&fit=crop" alt="Sushi"></div>
-          <div class="fd-card"><img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=200&q=80&auto=format&fit=crop" alt="Ristorante"></div>
+          <div class="fd-card"><img src="assets/beika.png" alt="Beika Ramen"></div>
+          <div class="fd-card"><img src="assets/akai.png" alt="Akaiito"></div>
+          <div class="fd-card"><img src="assets/beika-menu.png" alt="Menu"></div>
         </div>
         <div class="fd-front"></div>
       </div>
@@ -887,9 +1029,9 @@ footer{
         <div class="fd-back"></div>
         <div class="fd-tab"></div>
         <div class="fd-cards">
-          <div class="fd-card"><img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=200&q=80&auto=format&fit=crop" alt="Immobile"></div>
-          <div class="fd-card"><img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=200&q=80&auto=format&fit=crop" alt="Casa"></div>
-          <div class="fd-card"><img src="https://images.unsplash.com/photo-1582407947304-fd86f28f1bef?w=200&q=80&auto=format&fit=crop" alt="Appartamento"></div>
+          <div class="fd-card"><img src="assets/grande.jpg" alt="Grande Immobiliare"></div>
+          <div class="fd-card"><img src="assets/arcocase.jpg" alt="Arcocase"></div>
+          <div class="fd-card"><img src="assets/panorama.jpg" alt="Panorama Casa"></div>
         </div>
         <div class="fd-front"></div>
       </div>
@@ -942,7 +1084,7 @@ footer{
   <div id="srv-vp">
     <div id="srv-track">
 
-      <div class="sc">
+      <div class="sc" data-anim="web">
         <div class="sc-blob sc-blob-a"></div>
         <div class="sc-blob sc-blob-b"></div>
         <div class="sc-sweep"></div>
@@ -956,7 +1098,7 @@ footer{
         <div class="sc-dots"><span></span><span></span><span></span></div>
       </div>
 
-      <div class="sc">
+      <div class="sc" data-anim="ai">
         <div class="sc-blob sc-blob-a"></div>
         <div class="sc-blob sc-blob-b"></div>
         <div class="sc-sweep"></div>
@@ -970,7 +1112,7 @@ footer{
         <div class="sc-dots"><span></span><span></span><span></span></div>
       </div>
 
-      <div class="sc">
+      <div class="sc" data-anim="workflow">
         <div class="sc-blob sc-blob-a"></div>
         <div class="sc-blob sc-blob-b"></div>
         <div class="sc-sweep"></div>
@@ -984,7 +1126,7 @@ footer{
         <div class="sc-dots"><span></span><span></span><span></span></div>
       </div>
 
-      <div class="sc">
+      <div class="sc" data-anim="integration">
         <div class="sc-blob sc-blob-a"></div>
         <div class="sc-blob sc-blob-b"></div>
         <div class="sc-sweep"></div>
@@ -998,7 +1140,7 @@ footer{
         <div class="sc-dots"><span></span><span></span><span></span></div>
       </div>
 
-      <div class="sc">
+      <div class="sc" data-anim="gestionale">
         <div class="sc-blob sc-blob-a"></div>
         <div class="sc-blob sc-blob-b"></div>
         <div class="sc-sweep"></div>
@@ -1012,7 +1154,7 @@ footer{
         <div class="sc-dots"><span></span><span></span><span></span></div>
       </div>
 
-      <div class="sc">
+      <div class="sc" data-anim="api">
         <div class="sc-blob sc-blob-a"></div>
         <div class="sc-blob sc-blob-b"></div>
         <div class="sc-sweep"></div>
@@ -1277,10 +1419,75 @@ footer{
 <!-- work-preview floating image -->
 <div id="work-preview"><img id="work-preview-img" src="" alt=""></div>
 
+<!-- service preview animated panel -->
+<div id="svc-preview">
+  <div class="sp-wrap" data-type="web">
+    <p class="sp-label">Siti Web</p>
+    <div class="sp-browser">
+      <div class="sp-bbar">
+        <div class="sp-bdot" style="background:#ff5f57"></div>
+        <div class="sp-bdot" style="background:#febc2e"></div>
+        <div class="sp-bdot" style="background:#28c840"></div>
+        <div class="sp-burl"></div>
+      </div>
+      <div class="sp-bcontent">
+        <div class="sp-brow" style="--w:100%;height:22px;border-radius:3px"></div>
+        <div class="sp-brow" style="--w:70%"></div>
+        <div class="sp-brow" style="--w:85%"></div>
+        <div class="sp-brow" style="--w:50%;height:16px;border-radius:6px;background:rgba(124,58,237,.5)"></div>
+      </div>
+    </div>
+  </div>
+  <div class="sp-wrap" data-type="ai">
+    <p class="sp-label">Agente AI</p>
+    <div class="sp-chat">
+      <div class="sp-msg right">Ciao, voglio prenotare un tavolo</div>
+      <div class="sp-msg left">Certo! Per quante persone?</div>
+      <div class="sp-msg right">Per 4, venerdì sera</div>
+      <div class="sp-typing"><span></span><span></span><span></span></div>
+    </div>
+  </div>
+  <div class="sp-wrap" data-type="workflow">
+    <p class="sp-label">Workflow</p>
+    <div class="sp-flow">
+      <div class="sp-frow"><div class="sp-node src">Richiesta</div><div class="sp-arr">→</div><div class="sp-node act">Processo</div></div>
+      <div class="sp-frow" style="padding-left:24px"><div class="sp-arr">↓</div></div>
+      <div class="sp-frow"><div class="sp-node act">Verifica</div><div class="sp-arr">→</div><div class="sp-node out">✓ Done</div></div>
+    </div>
+  </div>
+  <div class="sp-wrap" data-type="integration">
+    <p class="sp-label">Integrazione AI</p>
+    <div class="sp-int">
+      <div class="sp-int-icon" style="background:rgba(124,58,237,.2)">🗂️</div>
+      <div class="sp-int-line"></div>
+      <div class="sp-int-icon" style="background:rgba(124,58,237,.35)">⚡</div>
+      <div class="sp-int-line" style="animation-delay:.6s"></div>
+      <div class="sp-int-icon" style="background:rgba(37,99,235,.25)">📊</div>
+    </div>
+  </div>
+  <div class="sp-wrap" data-type="gestionale">
+    <p class="sp-label">Dashboard</p>
+    <div class="sp-chart">
+      <div class="sp-bar" style="--h:70%"></div>
+      <div class="sp-bar" style="--h:45%"></div>
+      <div class="sp-bar" style="--h:85%"></div>
+      <div class="sp-bar" style="--h:55%"></div>
+      <div class="sp-bar" style="--h:65%"></div>
+    </div>
+  </div>
+  <div class="sp-wrap" data-type="api">
+    <p class="sp-label">API</p>
+    <div class="sp-api">
+      <div class="sp-api-row"><div class="sp-ep app">App</div><div class="sp-req">POST →</div><div class="sp-ep svc">API</div></div>
+      <div class="sp-api-row"><div class="sp-ep svc">API</div><div class="sp-req">→ GET</div><div class="sp-ep svc">CRM</div></div>
+      <div class="sp-api-row"><div class="sp-ep app">App</div><div class="sp-req">← 200</div><div class="sp-ep ok">OK</div></div>
+    </div>
+  </div>
+</div>
+
 <!-- GSAP da jsdelivr.net — unico CDN nella whitelist CSP -->
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.min.js"></script>
 <script>
 gsap.registerPlugin(ScrollTrigger);
 
@@ -1407,78 +1614,65 @@ if(matchMedia('(prefers-reduced-motion:reduce)').matches){
   gsap.globalTimeline.timeScale(0);
 }
 
-/* ─ MOUNTAIN SCENE (Three.js) ─ */
+/* ─ WAVE CANVAS (2D, lightweight) ─ */
 (function(){
-  const mount = document.getElementById('mountain-bg');
-  if(!mount||!window.THREE)return;
-  const W=mount.clientWidth,H=mount.clientHeight;
-  const scene=new THREE.Scene();
-  const cam=new THREE.PerspectiveCamera(75,W/H,0.1,100);
-  cam.position.set(0,1.5,3);cam.rotation.x=-0.3;
-  const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
-  renderer.setSize(W,H);renderer.setPixelRatio(Math.min(devicePixelRatio,2));
-  mount.appendChild(renderer.domElement);
-  const geo=new THREE.PlaneGeometry(12,8,96,96);
-  const mat=new THREE.ShaderMaterial({
-    side:THREE.DoubleSide,wireframe:false,transparent:true,
-    uniforms:{time:{value:0},lightPos:{value:new THREE.Vector3(0,0,5)},col:{value:new THREE.Color('#7C3AED')}},
-    vertexShader:`
-      uniform float time;varying vec3 vN,vP;
-      vec3 m289(vec3 x){return x-floor(x*(1./289.))*289.;}
-      vec4 m289(vec4 x){return x-floor(x*(1./289.))*289.;}
-      vec4 perm(vec4 x){return m289(((x*34.)+1.)*x);}
-      vec4 tIS(vec4 r){return 1.79284291400159-0.85373472095314*r;}
-      float sn(vec3 v){
-        const vec2 C=vec2(1./6.,1./3.);const vec4 D=vec4(0.,.5,1.,2.);
-        vec3 i=floor(v+dot(v,C.yyy));vec3 x0=v-i+dot(i,C.xxx);
-        vec3 g=step(x0.yzx,x0.xyz);vec3 l=1.-g;
-        vec3 i1=min(g.xyz,l.zxy);vec3 i2=max(g.xyz,l.zxy);
-        vec3 x1=x0-i1+C.xxx;vec3 x2=x0-i2+C.yyy;vec3 x3=x0-D.yyy;
-        i=m289(i);
-        vec4 p=perm(perm(perm(i.z+vec4(0.,i1.z,i2.z,1.))+i.y+vec4(0.,i1.y,i2.y,1.))+i.x+vec4(0.,i1.x,i2.x,1.));
-        float n_=0.142857142857;vec3 ns=n_*D.wyz-D.xzx;
-        vec4 j=p-49.*floor(p*ns.z*ns.z);vec4 x_=floor(j*ns.z);vec4 y_=floor(j-7.*x_);
-        vec4 x=x_*ns.x+ns.yyyy;vec4 y=y_*ns.x+ns.yyyy;vec4 h=1.-abs(x)-abs(y);
-        vec4 b0=vec4(x.xy,y.xy);vec4 b1=vec4(x.zw,y.zw);
-        vec4 s0=floor(b0)*2.+1.;vec4 s1=floor(b1)*2.+1.;vec4 sh=-step(h,vec4(0.));
-        vec4 a0=b0.xzyw+s0.xzyw*sh.xxyy;vec4 a1=b1.xzyw+s1.xzyw*sh.zzww;
-        vec3 p0=vec3(a0.xy,h.x);vec3 p1=vec3(a0.zw,h.y);vec3 p2=vec3(a1.xy,h.z);vec3 p3=vec3(a1.zw,h.w);
-        vec4 norm=tIS(vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3)));
-        p0*=norm.x;p1*=norm.y;p2*=norm.z;p3*=norm.w;
-        vec4 m=max(0.6-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.);m=m*m;
-        return 42.*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));
+  const mount=document.getElementById('mountain-bg');
+  if(!mount)return;
+  const c=document.createElement('canvas');
+  mount.appendChild(c);
+  const ctx=c.getContext('2d');
+  let W,H,mx=0.5,my=0.5,t=0;
+  function resize(){W=c.width=mount.offsetWidth;H=c.height=mount.offsetHeight;}
+  resize();
+  window.addEventListener('resize',resize);
+  window.addEventListener('mousemove',e=>{mx=e.clientX/innerWidth;my=e.clientY/innerHeight;});
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    const waves=[
+      {amp:H*.08,freq:0.006,speed:0.4,y:H*.55,alpha:.18,color:'124,58,237'},
+      {amp:H*.06,freq:0.009,speed:0.6,y:H*.65,alpha:.14,color:'37,99,235'},
+      {amp:H*.05,freq:0.012,speed:0.8,y:H*.75,alpha:.12,color:'167,139,250'},
+    ];
+    waves.forEach(w=>{
+      ctx.beginPath();
+      for(let x=0;x<=W;x+=4){
+        const y=w.y+Math.sin(x*w.freq+t*w.speed+mx*2)*w.amp*(1+my*.4);
+        x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
       }
-      void main(){
-        vN=normal;vP=position;
-        float d=sn(vec3(position.x*.8,position.y*.8-time*.2,0.))*.6;
-        d+=sn(vec3(position.x*1.6,position.y*1.6-time*.2,0.))*.3;
-        vec3 np=position+normal*d;
-        gl_Position=projectionMatrix*modelViewMatrix*vec4(np,1.);
-      }`,
-    fragmentShader:`
-      uniform vec3 col,lightPos;varying vec3 vN,vP;
-      void main(){
-        vec3 n=normalize(vN);vec3 ld=normalize(lightPos-vP);
-        float diff=max(dot(n,ld),0.);
-        float fr=pow(1.-dot(n,vec3(0.,0.,1.)),2.);
-        vec3 fc=col*diff+col*fr*.5;
-        gl_FragColor=vec4(fc,.85);
-      }`
+      ctx.lineTo(W,H);ctx.lineTo(0,H);ctx.closePath();
+      ctx.fillStyle=`rgba(${w.color},${w.alpha})`;
+      ctx.fill();
+    });
+    t+=0.016;
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ─ SERVICE PREVIEW ─ */
+(function(){
+  const sp=document.getElementById('svc-preview');
+  if(!sp)return;
+  let mx=0,my=0,sx=0,sy=0,active=false;
+  function lerp(a,b,t){return a+(b-a)*t;}
+  (function loop(){sx=lerp(sx,mx,0.13);sy=lerp(sy,my,0.13);
+    if(active)sp.style.transform=`translate3d(${sx+28}px,${sy-sp.offsetHeight/2}px,0)`;
+    requestAnimationFrame(loop);})();
+  document.querySelectorAll('.sc[data-anim]').forEach(sc=>{
+    const type=sc.dataset.anim;
+    sc.addEventListener('mouseenter',()=>{
+      sp.querySelectorAll('.sp-wrap').forEach(w=>w.classList.remove('active'));
+      const target=sp.querySelector(`.sp-wrap[data-type="${type}"]`);
+      if(!target)return;
+      // reset animations by re-cloning
+      const clone=target.cloneNode(true);
+      target.replaceWith(clone);
+      clone.classList.add('active');
+      sp.classList.add('active');active=true;
+    });
+    sc.addEventListener('mouseleave',()=>{sp.classList.remove('active');active=false;});
   });
-  const mesh=new THREE.Mesh(geo,mat);mesh.rotation.x=-Math.PI/2;scene.add(mesh);
-  const pl=new THREE.PointLight(0xffffff,1,100);pl.position.set(0,0,5);scene.add(pl);
-  let raf;
-  function anim(t){mat.uniforms.time.value=t*.0003;renderer.render(scene,cam);raf=requestAnimationFrame(anim);}
-  anim(0);
-  window.addEventListener('resize',()=>{
-    const w=mount.clientWidth,h=mount.clientHeight;
-    cam.aspect=w/h;cam.updateProjectionMatrix();renderer.setSize(w,h);
-  });
-  window.addEventListener('mousemove',e=>{
-    const x=(e.clientX/innerWidth)*2-1,y=-(e.clientY/innerHeight)*2+1;
-    const p=new THREE.Vector3(x*5,2,2-y*2);
-    pl.position.copy(p);mat.uniforms.lightPos.value=p;
-  });
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
 })();
 
 /* ─ WORK PREVIEW (project-showcase hover) ─ */
